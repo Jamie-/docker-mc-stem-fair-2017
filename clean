@@ -1,4 +1,5 @@
 #!/bin/bash
+# Cleans out all docker images, containers and container data.
 
 # Stop all containers
 echo "Stopping containers."

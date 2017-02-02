@@ -1,5 +1,5 @@
-# Auto build stack for Minecraft host at the Southampton STEM fair 2017
 #!/bin/bash
+# Auto build stack for Minecraft host at the Southampton STEM fair 2017
 
 # Install stack
 # add docker ppa

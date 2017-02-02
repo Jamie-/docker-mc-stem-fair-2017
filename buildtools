@@ -1,5 +1,5 @@
-# Builds Spigot jars on host
 #!/bin/bash
+# Build Spigot jars on host
 
 # Install prerequisits
 apt-get update

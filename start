@@ -1,5 +1,5 @@
-# Container creation script for Minecraft host at the Southampton STEM fair 2017
 #!/bin/bash
+# Start all containers
 
 echo "Starting servers."
 
