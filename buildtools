@@ -1,0 +1,16 @@
+# Builds Spigot jars on host
+#!/bin/bash
+
+# Install prerequisits
+apt-get update
+apt-get install curl git -y
+curl -v -j -k -L -H "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz > /tmp/jdk.tar.gz
+tar -zxf /tmp/jdk.tar.gz -C /opt
+mv /opt/jdk* /opt/java
+ln -s /opt/java/bin/java /usr/bin/java
+
+# Build fresh Spigot jars
+mkdir -p /opt/buildtools
+curl -o /opt/buildtools/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+cd /opt/buildtools
+java -jar BuildTools.jar

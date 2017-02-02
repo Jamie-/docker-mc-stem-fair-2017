@@ -1,0 +1,27 @@
+# Auto build stack for Minecraft host at the Southampton STEM fair 2017
+#!/bin/bash
+
+# Install stack
+# add docker ppa
+apt-get update
+apt-get upgrade -y
+apt-get install -y apt-transport-https ca-certificates software-properties-common docker-engine
+
+# Create server data stores #TODO create config file for multiple worlds (with data coming from /mnt)
+mkdir -p /srv/server-data/bungee
+mkdir -p /srv/server-data/lobby
+mkdir -p /srv/server-data/host1
+mkdir -p /srv/server-data/host2
+
+# Build docker images
+cp /opt/buildtools/spigot-*.jar docker-spigot/spigot.jar
+docker build -t spigotmc docker-spigot
+docker build -t bungee docker-bungee
+
+# Ask to start services? #TODO ask to start
+docker run -d=true -p=25565:25565 -v=/srv/server-data/bungee:/srv/server --name bungeecord_container -t bungee
+docker run -d=true -p=25566:25565 -v=/srv/server-data/lobby:/srv/server --name lobby_container -t spigotmc
+docker run -d=true -p=25567:25565 -v=/srv/server-data/host1:/srv/server --name host1_container -t spigotmc
+docker run -d=true -p=25568:25565 -v=/srv/server-data/host2:/srv/server --name host2_container -t spigotmc
+
+printf "\nSetup complete, servers running!\n"

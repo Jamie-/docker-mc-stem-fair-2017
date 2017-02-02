@@ -1,0 +1,11 @@
+# Container creation script for Minecraft host at the Southampton STEM fair 2017
+#!/bin/bash
+
+echo "Starting servers."
+
+docker start lobby_container
+docker start host1_container
+docker start host2_container
+docker start bungeecord_container
+
+printf "\nServers started!\n"

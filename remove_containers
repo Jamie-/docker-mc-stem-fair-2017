@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Stop all containers
+echo "Stopping containers."
+docker stop lobby_container
+docker stop host1_container
+docker stop host2_container
+docker stop bungeecord_container
+
+# Remove containers
+echo "Removing containers"
+docker rm lobby_container
+docker rm host1_container
+docker rm host2_container
+docker rm bungeecord_container
+
+echo "Done!"

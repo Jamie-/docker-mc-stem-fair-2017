@@ -1,0 +1,12 @@
+#!/bin/bash
+cp /srv/res/spigot.jar /srv/server
+cp /srv/res/server.properties /srv/server
+cp /srv/res/spigot.jar /srv/server
+cd /srv/server
+
+# Accept EULA
+echo "eula=true" > eula.txt
+
+# Start Minecraft server!
+java -Xmx2G -XX:+UseConcMarkSweepGC -jar spigot.jar
+

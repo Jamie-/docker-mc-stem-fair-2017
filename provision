@@ -1,0 +1,5 @@
+# Provision host from scratch
+#!/bin/bash
+
+sudo ./buildtools
+sudo ./build

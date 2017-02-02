@@ -1,0 +1,11 @@
+# Container creation script for Minecraft host at the Southampton STEM fair 2017
+#!/bin/bash
+
+echo "Stopping servers."
+
+docker stop bungeecord_container
+docker stop lobby_container
+docker stop host1_container
+docker stop host2_container
+
+printf "\nServers stopped!\n"

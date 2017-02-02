@@ -1,0 +1,8 @@
+#!/bin/bash
+cp /srv/res/BungeeCord.jar /srv/server
+cp /srv/res/config.yml /srv/server
+cd /srv/server
+
+# Start Bungee server!
+java -Xms512M -Xmx512M -jar BungeeCord.jar
+

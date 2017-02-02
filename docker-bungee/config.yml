@@ -1,0 +1,50 @@
+# Ammended version of the default configuration file.
+
+ip_forward: false
+network_compression_threshold: 256
+stats: ccd2bf9e-7182-4b10-ab93-5fae684ee334
+groups:
+  Hexibox:
+  - admin
+servers:
+  lobby:
+    motd: Welcome the the lobby!
+    address: 10.0.10.116:25566
+    restricted: false
+  server1:
+    motd: This is server one
+    address: 10.0.10.116:25567
+    restricted: false
+  server2:
+    motd: This is server two
+    address: 10.0.10.116:25568
+    restricted: false
+timeout: 30000
+player_limit: -1
+listeners:
+- query_port: 25565
+  motd: Southampon Science and Engineering Fair!
+  priorities:
+  - lobby
+  bind_local_address: true
+  tab_list: GLOBAL_PING
+  query_enabled: false
+  host: 0.0.0.0:25565
+  max_players: 100
+  tab_size: 60
+  ping_passthrough: false
+  force_default_server: false
+permissions:
+  default:
+  - bungeecord.command.server
+  - bungeecord.command.list
+  admin:
+  - bungeecord.command.alert
+  - bungeecord.command.end
+  - bungeecord.command.ip
+  - bungeecord.command.reload
+online_mode: false
+log_commands: false
+disabled_commands:
+- disabledcommandhere
+connection_throttle: 4000
