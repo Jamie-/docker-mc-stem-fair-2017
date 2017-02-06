@@ -7,6 +7,8 @@ if [[ $EUID -ne 0 ]]; then
     exit
 fi
 
+pushd
+
 # Install software stack
 apt-get update
 apt-get upgrade -y
@@ -30,6 +32,7 @@ cd /opt/buildtools
 java -jar BuildTools.jar
 
 # Create server data stores #TODO create config file for multiple worlds (with data coming from /mnt)
+popd
 mkdir -p /srv/server-data/bungee
 mkdir -p /srv/server-data/lobby
 mkdir -p /srv/server-data/host1
