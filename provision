@@ -46,4 +46,3 @@ docker run -d=true -p=25566:25565 -v=/srv/server-data/lobby:/srv/server --name l
 docker run -d=true -p=25567:25565 -v=/srv/server-data/host1:/srv/server --name host1_container -t spigotmc
 docker run -d=true -p=25568:25565 -v=/srv/server-data/host2:/srv/server --name host2_container -t spigotmc
 
-printf "\nSetup complete, servers running!\n"
