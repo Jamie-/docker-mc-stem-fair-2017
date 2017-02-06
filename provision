@@ -40,9 +40,13 @@ cp /opt/buildtools/spigot-*.jar docker-spigot/spigot.jar
 docker build -t spigotmc docker-spigot
 docker build -t bungee docker-bungee
 
-# Ask to start services? #TODO ask to start
-docker run -d=true -p=25565:25565 -v=/srv/server-data/bungee:/srv/server --name bungeecord_container -t bungee
-docker run -d=true -p=25566:25565 -v=/srv/server-data/lobby:/srv/server --name lobby_container -t spigotmc
-docker run -d=true -p=25567:25565 -v=/srv/server-data/host1:/srv/server --name host1_container -t spigotmc
-docker run -d=true -p=25568:25565 -v=/srv/server-data/host2:/srv/server --name host2_container -t spigotmc
-
+# Ask to start services
+startup=""
+printf "Initialise and start docker containers? (y/n): "
+read startup
+if [ "$startup" == "y" ]; then
+    docker run -d=true -p=25565:25565 -v=/srv/server-data/bungee:/srv/server --name bungeecord_container -t bungee
+    docker run -d=true -p=25566:25565 -v=/srv/server-data/lobby:/srv/server --name lobby_container -t spigotmc
+    docker run -d=true -p=25567:25565 -v=/srv/server-data/host1:/srv/server --name host1_container -t spigotmc
+    docker run -d=true -p=25568:25565 -v=/srv/server-data/host2:/srv/server --name host2_container -t spigotmc
+fi
