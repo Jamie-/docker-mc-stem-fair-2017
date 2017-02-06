@@ -7,7 +7,7 @@ if [[ $EUID -ne 0 ]]; then
     exit
 fi
 
-pushd
+pushd .
 
 # Install software stack
 apt-get update
