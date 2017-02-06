@@ -1,11 +1,17 @@
 #!/bin/bash
 # Auto build stack for Minecraft host at the Southampton STEM fair 2017
 
+# Check ran by root, if not, elevate to root
+if [[ $EUID -ne 0 ]]; then
+    sudo su -s "$0"
+    exit
+fi
+
 # Install stack
 # add docker ppa
 apt-get update
 apt-get upgrade -y
-apt-get install -y apt-transport-https ca-certificates software-properties-common docker-engine
+apt-get install -y curl apt-transport-https ca-certificates software-properties-common docker-engine
 
 # Create server data stores #TODO create config file for multiple worlds (with data coming from /mnt)
 mkdir -p /srv/server-data/bungee
