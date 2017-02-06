@@ -1,5 +1,11 @@
 #!/bin/bash
 # Provision host from scratch
 
-sudo ./buildtools
-sudo ./build
+# Check ran by root, if not, elevate to root
+if [[ $EUID -ne 0 ]]; then
+    sudo su -s "$0"
+    exit
+fi
+
+./buildtools
+./build
