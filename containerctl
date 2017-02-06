@@ -1,0 +1,25 @@
+#!/bin/bash
+# Start and stop Minecraft related docker containers
+
+case $1 in 
+    start)
+        echo "Starting containers."
+        docker start lobby_container
+        docker start host1_container
+        docker start host2_container
+        docker start bungeecord_container
+        echo "Containers started!"
+        ;;
+    stop)
+        echo "Stopping containers."
+        docker stop bungeecord_container
+        docker stop lobby_container
+        docker stop host1_container
+        docker stop host2_container
+        echo "Containers stopped!"
+        ;;
+    *)
+        echo "Tool for starting and stopping Mincraft related docker containers."
+        echo "Usage: containerctl [start|stop]"
+        ;;
+esac
