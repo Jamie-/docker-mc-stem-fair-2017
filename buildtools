@@ -1,6 +1,12 @@
 #!/bin/bash
 # Build Spigot jars on host
 
+# Check ran by root, if not, elevate to root
+if [[ $EUID -ne 0 ]]; then
+    sudo su -s "$0"
+    exit
+fi
+
 # Install prerequisits
 apt-get update
 apt-get install curl git -y
