@@ -1,5 +1,5 @@
 #!/bin/bash
-# Provision host from scratch
+# Auto build stack for Minecraft host at the Southampton STEM fair 2017
 
 # Check ran by root, if not, elevate to root
 if [[ $EUID -ne 0 ]]; then
@@ -7,5 +7,43 @@ if [[ $EUID -ne 0 ]]; then
     exit
 fi
 
-./buildtools
-./build
+# Install software stack
+apt-get update
+apt-get upgrade -y
+apt-get install -y curl git apt-transport-https ca-certificates software-properties-common
+curl -fsSL https://yum.dockerproject.org/gpg | apt-key add -
+printf "\n\n# Docker PPA\n" >> /etc/apt/sources.list
+printf "deb https://apt.dockerproject.org/repo/ debian-$(lsb_release -cs) main" >> /etc/apt/sources.list
+apt-get update
+apt-get install -y docker-engine
+
+# Install Oracle JDK
+curl -v -j -k -L -H -o /tmp/jdk.tar.gz "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz
+tar -zxf /tmp/jdk.tar.gz -C /opt
+mv /opt/jdk* /opt/java
+ln -s /opt/java/bin/java /usr/bin/java
+
+# Build fresh Spigot jars
+mkdir -p /opt/buildtools
+curl -o /opt/buildtools/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+cd /opt/buildtools
+java -jar BuildTools.jar
+
+# Create server data stores #TODO create config file for multiple worlds (with data coming from /mnt)
+mkdir -p /srv/server-data/bungee
+mkdir -p /srv/server-data/lobby
+mkdir -p /srv/server-data/host1
+mkdir -p /srv/server-data/host2
+
+# Build docker images
+cp /opt/buildtools/spigot-*.jar docker-spigot/spigot.jar
+docker build -t spigotmc docker-spigot
+docker build -t bungee docker-bungee
+
+# Ask to start services? #TODO ask to start
+docker run -d=true -p=25565:25565 -v=/srv/server-data/bungee:/srv/server --name bungeecord_container -t bungee
+docker run -d=true -p=25566:25565 -v=/srv/server-data/lobby:/srv/server --name lobby_container -t spigotmc
+docker run -d=true -p=25567:25565 -v=/srv/server-data/host1:/srv/server --name host1_container -t spigotmc
+docker run -d=true -p=25568:25565 -v=/srv/server-data/host2:/srv/server --name host2_container -t spigotmc
+
+printf "\nSetup complete, servers running!\n"
