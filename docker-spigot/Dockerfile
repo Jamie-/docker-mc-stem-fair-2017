@@ -12,16 +12,9 @@ RUN tar -zxf /tmp/jdk.tar.gz -C /opt
 RUN mv /opt/jdk* /opt/java
 RUN ln -s /opt/java/bin/java /usr/bin/java
 
-# Build fresh Spigot jars
-RUN mkdir -p /opt/buildtools
-RUN curl -o /opt/buildtools/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
-RUN cd /opt/buildtools; java -jar BuildTools.jar
-
 # Setup Minecraft server
 RUN cd /
 RUN mkdir -p /srv/res
-RUN cp /opt/buildtools/spigot-*.jar /srv/res/spigot.jar
-
 ADD ./start /srv/res/start
 ADD ./server.properties /srv/res/server.properties	
 ADD ./spigot.jar /srv/res/spigot.jar
