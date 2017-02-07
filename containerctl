@@ -31,6 +31,6 @@ case $1 in
         ;;
     *)
         echo "Tool for starting and stopping Mincraft related docker containers."
-        echo "Usage: containerctl [start|stop]"
+        echo "Usage: containerctl [start|stop|create]"
         ;;
 esac
