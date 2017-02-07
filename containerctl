@@ -1,6 +1,11 @@
 #!/bin/bash
 # Start and stop Minecraft related docker containers
 
+#if [ $EUID -ne 0 ] || [ $(groups | grep -c docker) -ne 1 ]; then
+#    echo "You must have docker privileges to use this command."
+#    exit 1
+#fi
+
 case $1 in 
     start)
         echo "Starting containers."
@@ -11,6 +16,18 @@ case $1 in
         echo "Stopping containers."
         docker ps | grep "_container" | awk '{print $1}' | xargs docker stop
         echo "Containers stopped!"
+        ;;
+    create)
+        echo "Creating containers and starting servers."
+        port=25566
+        for w in /srv/server-data/*; do
+            [ -d "$w" ] || continue # if not a directory, skip
+            worldName="$(basename $w)"
+            docker run -d=true -p="$port":25565 -v=/srv/server-data/"$w":/srv/server --name mcs_"$w"_container -t spigotmc
+            let port=port+1
+        done
+        docker run -d=true -p=25565:25565 -v=/srv/server-data/bungee:/srv/server --name bungeecord_container -t bungee
+        echo "Servers started!"
         ;;
     *)
         echo "Tool for starting and stopping Mincraft related docker containers."
