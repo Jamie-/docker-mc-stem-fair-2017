@@ -4,18 +4,12 @@
 case $1 in 
     start)
         echo "Starting containers."
-        docker start lobby_container
-        docker start host1_container
-        docker start host2_container
-        docker start bungeecord_container
+        docker ps -a | grep "_container" | awk '{print $1}' | xargs docker start
         echo "Containers started!"
         ;;
     stop)
         echo "Stopping containers."
-        docker stop bungeecord_container
-        docker stop lobby_container
-        docker stop host1_container
-        docker stop host2_container
+        docker ps | grep "_container" | awk '{print $1}' | xargs docker stop
         echo "Containers stopped!"
         ;;
     *)
