@@ -1,14 +1,15 @@
 #!/bin/bash
 # Start and stop Minecraft related docker containers
 
-#if [ $EUID -ne 0 ] || [ $(groups | grep -c docker) -ne 1 ]; then
-#    echo "You must have docker privileges to use this command."
-#    exit 1
-#fi
+if [ $EUID -ne 0 ] && [ $(groups | grep -c docker) -ne 1 ]; then
+    echo "You must have docker privileges to use this command."
+    exit 1
+fi
 
 case $1 in 
     start)
         echo "Starting containers."
+        if [[]]
         docker ps -a | grep "_container" | awk '{print $1}' | xargs docker start
         echo "Containers started!"
         ;;
