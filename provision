@@ -12,7 +12,7 @@ pushd .
 # Install software stack
 apt-get update
 apt-get upgrade -y
-apt-get install -y curl git apt-transport-https ca-certificates software-properties-common
+apt-get install -y curl git unzip apt-transport-https ca-certificates software-properties-common
 curl -fsSL https://yum.dockerproject.org/gpg | apt-key add -
 printf "\n\n# Docker PPA\n" >> /etc/apt/sources.list
 printf "deb https://apt.dockerproject.org/repo/ debian-$(lsb_release -cs) main" >> /etc/apt/sources.list
@@ -31,14 +31,16 @@ curl -o /opt/buildtools/BuildTools.jar https://hub.spigotmc.org/jenkins/job/Buil
 cd /opt/buildtools
 java -jar BuildTools.jar
 
-# Create server data stores #TODO create config file for multiple worlds (with data coming from /mnt)
-popd
-mkdir -p /srv/server-data/bungee
-mkdir -p /srv/server-data/lobby
-mkdir -p /srv/server-data/host1
-mkdir -p /srv/server-data/host2
+# Create server data stores
+for f in /mnt/*.zip; do
+    worldName="$(basename $f .zip)"
+    echo "Creating data directory for $worldName."
+    mkdir -p /srv/server-data/$worldName/saves
+    unzip /mnt/$worldName.zip -d /srv/server-data/$worldName/saves
+done
 
 # Build docker images
+popd
 cp /opt/buildtools/spigot-*.jar docker-spigot/spigot.jar
 docker build -t spigotmc docker-spigot
 docker build -t bungee docker-bungee
@@ -48,8 +50,12 @@ startup=""
 printf "Initialise and start docker containers? (y/n): "
 read startup
 if [ "$startup" == "y" ]; then
+    port=25566
+    for w in /srv/server-data/*; do
+        [ -d "$w" ] || continue # if not a directory, skip
+        worldName="$(basename $w)"
+        docker run -d=true -p="$port":25565 -v=/srv/server-data/"$w":/srv/server --name mcs_"$w"_container -t spigotmc
+        let port=port+1
+    done
     docker run -d=true -p=25565:25565 -v=/srv/server-data/bungee:/srv/server --name bungeecord_container -t bungee
-    docker run -d=true -p=25566:25565 -v=/srv/server-data/lobby:/srv/server --name lobby_container -t spigotmc
-    docker run -d=true -p=25567:25565 -v=/srv/server-data/host1:/srv/server --name host1_container -t spigotmc
-    docker run -d=true -p=25568:25565 -v=/srv/server-data/host2:/srv/server --name host2_container -t spigotmc
 fi
