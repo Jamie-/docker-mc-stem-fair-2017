@@ -16,14 +16,31 @@ echo "Removing containers"
 docker ps -a | grep "_container" | awk '{print $1}' | xargs docker rm
 
 # Remove images
-echo "Removing images"
-docker rmi bungee
-docker rmi spigotmc
+removeImages=""
+printf "Remove Spigot and Bungee docker images? (y/n): "
+read removeImages
+if [ "$removeImages" == "y" ]; then
+    echo "Removing images"
+    docker rmi bungee
+    docker rmi spigotmc
+fi
 
 # Clean data
-echo "Removing all data files."
-rm -rf /srv/server-data
-rm -rf /opt/buildtools
-rm -ff /opt/java
+removeData=""
+printf "Remove container data? (y/n): "
+read removeData
+if [ "$removeData" == "y" ]; then
+    echo "Removing all data files."
+    rm -rf /srv/server-data
+fi
+
+# Clean Java
+removeJava=""
+printf "Remove Java and Buildtools? (y/n): "
+read removeJava
+if [ "$removeJava" == "y" ]; then
+    rm -rf /opt/buildtools
+    rm -ff /opt/java
+fi
 
 echo "Done!"
