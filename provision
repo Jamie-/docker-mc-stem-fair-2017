@@ -54,7 +54,7 @@ if [ "$startup" == "y" ]; then
     for w in /srv/server-data/*; do
         [ -d "$w" ] || continue # if not a directory, skip
         worldName="$(basename $w)"
-        docker run -d=true -p="$port":25565 -v=/srv/server-data/"$w":/srv/server --name mcs_"$w"_container -t spigotmc
+        docker run -d=true -p="$port":25565 -v=/srv/server-data/"$worldName":/srv/server --name mcs_"$worldName"_container -t spigotmc
         let port=port+1
     done
     docker run -d=true -p=25565:25565 -v=/srv/server-data/bungee:/srv/server --name bungeecord_container -t bungee
