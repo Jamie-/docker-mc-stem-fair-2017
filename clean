@@ -1,6 +1,12 @@
 #!/bin/bash
 # Cleans out all docker images, containers and container data.
 
+# Check ran by root, if not, elevate to root
+if [[ $EUID -ne 0 ]]; then
+    sudo su -s "$0"
+    exit
+fi
+
 # Stop all containers
 echo "Stopping containers."
 docker ps | grep "_container" | awk '{print $1}' | xargs docker stop
