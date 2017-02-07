@@ -35,12 +35,26 @@ java -jar BuildTools.jar
 for f in /mnt/*.zip; do
     worldName="$(basename $f .zip)"
     echo "Creating data directory for $worldName."
-    mkdir -p /srv/server-data/$worldName/saves
-    unzip /mnt/$worldName.zip -d /srv/server-data/$worldName/saves
+    mkdir -p /srv/server-data/mcs_$worldName/saves
+    unzip /mnt/$worldName.zip -d /srv/server-data/mcs_$worldName/saves
+done
+
+# Create bungee config.yml
+popd
+config=docker-bungee/config.yml
+echo "servers:" >> "$config"
+pt=25566
+for w in /srv/server-data/mcs_*; do
+    [ -d "$w" ] || continue # if not a directory, skip
+    worldName="$(basename $w | sed 's/mcs_//')"
+    echo "  $worldName:" >> "$config"
+    echo "    motd: Welcome to $worldName" >> "$config"
+    echo "    address: localhost:$pt" >> "$config"
+    echo "    restricted: false" >> "$config"
+    let pt=pt+1
 done
 
 # Build docker images
-popd
 cp /opt/buildtools/spigot-*.jar docker-spigot/spigot.jar
 docker build -t spigotmc docker-spigot
 docker build -t bungee docker-bungee
@@ -51,9 +65,9 @@ printf "Initialise and start docker containers? (y/n): "
 read startup
 if [ "$startup" == "y" ]; then
     port=25566
-    for w in /srv/server-data/*; do
+    for w in /srv/server-data/mcs_*; do
         [ -d "$w" ] || continue # if not a directory, skip
-        worldName="$(basename $w)"
+        worldName="$(basename $w | sed 's/mcs_//')"
         docker run -d=true -p="$port":25565 -v=/srv/server-data/"$worldName":/srv/server --name mcs_"$worldName"_container -t spigotmc
         let port=port+1
     done

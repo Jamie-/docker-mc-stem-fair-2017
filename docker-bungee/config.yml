@@ -6,19 +6,6 @@ stats: ccd2bf9e-7182-4b10-ab93-5fae684ee334
 groups:
   Hexibox:
   - admin
-servers:
-  lobby:
-    motd: Welcome the the lobby!
-    address: 10.0.10.116:25566
-    restricted: false
-  server1:
-    motd: This is server one
-    address: 10.0.10.116:25567
-    restricted: false
-  server2:
-    motd: This is server two
-    address: 10.0.10.116:25568
-    restricted: false
 timeout: 30000
 player_limit: -1
 listeners:
