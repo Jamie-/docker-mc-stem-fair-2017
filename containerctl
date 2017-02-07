@@ -8,15 +8,22 @@ fi
 
 case $1 in 
     start)
-        echo "Starting containers."
-        if [[]]
-        docker ps -a | grep "_container" | awk '{print $1}' | xargs docker start
-        echo "Containers started!"
+        if [[ $(docker ps -a | grep -c "_container") -ne 0 ]]; then
+            echo "Starting containers." 
+            docker ps -a | grep "_container" | awk '{print $1}' | xargs docker start
+            echo "Containers started!"
+        else 
+            echo "No containers available to start."
+        fi
         ;;
     stop)
-        echo "Stopping containers."
-        docker ps | grep "_container" | awk '{print $1}' | xargs docker stop
-        echo "Containers stopped!"
+        if [[ $(docker ps | grep -c "_container") -ne 0 ]]; then
+            echo "Stopping containers."
+            docker ps | grep "_container" | awk '{print $1}' | xargs docker stop
+            echo "Containers stopped!"
+        else
+            echo "No containers available to stop."
+        fi
         ;;
     create)
         echo "Creating containers and starting servers."
