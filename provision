@@ -1,13 +1,11 @@
 #!/bin/bash
-# Auto build stack for Minecraft host at the Southampton STEM fair 2017
+# Auto provision host for Minecraft host at the Southampton STEM fair 2017
 
 # Check ran by root, if not, elevate to root
 if [[ $EUID -ne 0 ]]; then
     sudo su -s "$0"
     exit
 fi
-
-pushd .
 
 # Install software stack
 apt-get update
@@ -31,50 +29,4 @@ curl -o /opt/buildtools/BuildTools.jar https://hub.spigotmc.org/jenkins/job/Buil
 cd /opt/buildtools
 java -jar BuildTools.jar
 
-# Create server data stores
-for f in /mnt/*.zip; do
-    worldName="$(basename $f .zip)"
-    echo "Creating data directory for $worldName."
-    mkdir -p /srv/server-data/mcs_$worldName/saves
-    unzip /mnt/$worldName.zip -d /srv/server-data/mcs_$worldName/saves
-done
-
-# Create bungee config.yml
-popd
-config=docker-bungee/config.yml
-echo "servers:" >> "$config"
-ipAddr=$(ip addr | grep 'inet ' | grep -vE '(127.0.0.1|docker)' | cut -d/ -f1 | awk '{ print $2 }')
-pt=25566
-for w in /srv/server-data/mcs_*; do
-    [ -d "$w" ] || continue # if not a directory, skip
-    worldName="$(basename $w | sed 's/mcs_//')"
-    echo "  $worldName:" >> "$config"
-    echo "    motd: Welcome to $worldName" >> "$config"
-    echo "    address: $ipAddr:$pt" >> "$config"
-    echo "    restricted: false" >> "$config"
-    let pt=pt+1
-done
-
-# Build docker images
-cp /opt/buildtools/spigot-*.jar docker-spigot/spigot.jar
-docker build -t spigotmc docker-spigot
-docker build -t bungee docker-bungee
-
-# Ask to start services
-startup=""
-printf "Initialise and start docker containers? (y/n): "
-read startup
-if [ "$startup" == "y" ]; then
-    port=25566
-    for w in /srv/server-data/mcs_*; do
-        [ -d "$w" ] || continue # if not a directory, skip
-        worldName="$(basename $w | sed 's/mcs_//')"
-        docker run -d=true -p="$port":25565 -v=/srv/server-data/mcs_"$worldName":/srv/server --name mcs_"$worldName"_container -t spigotmc
-        let port=port+1
-    done
-    docker run -d=true -p=25565:25565 -v=/srv/server-data/bungee:/srv/server --name bungeecord_container -t bungee
-fi
-
-# Inform user of server IP
-printf "Server IP address: "
-ip addr | grep 'inet ' | grep -vE '(127.0.0.1|docker)' | cut -d/ -f1 | awk '{ print $2 }'
+echo "Host ready for docker container configuration."
