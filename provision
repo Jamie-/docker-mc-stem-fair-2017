@@ -43,13 +43,14 @@ done
 popd
 config=docker-bungee/config.yml
 echo "servers:" >> "$config"
+ipAddr=$(ip addr | grep 'inet ' | grep -vE '(127.0.0.1|docker)' | cut -d/ -f1 | awk '{ print $2 }')
 pt=25566
 for w in /srv/server-data/mcs_*; do
     [ -d "$w" ] || continue # if not a directory, skip
     worldName="$(basename $w | sed 's/mcs_//')"
     echo "  $worldName:" >> "$config"
     echo "    motd: Welcome to $worldName" >> "$config"
-    echo "    address: localhost:$pt" >> "$config"
+    echo "    address: $ipAddr:$pt" >> "$config"
     echo "    restricted: false" >> "$config"
     let pt=pt+1
 done
