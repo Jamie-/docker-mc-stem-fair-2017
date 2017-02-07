@@ -68,8 +68,12 @@ if [ "$startup" == "y" ]; then
     for w in /srv/server-data/mcs_*; do
         [ -d "$w" ] || continue # if not a directory, skip
         worldName="$(basename $w | sed 's/mcs_//')"
-        docker run -d=true -p="$port":25565 -v=/srv/server-data/"$worldName":/srv/server --name mcs_"$worldName"_container -t spigotmc
+        docker run -d=true -p="$port":25565 -v=/srv/server-data/mcs_"$worldName":/srv/server --name mcs_"$worldName"_container -t spigotmc
         let port=port+1
     done
     docker run -d=true -p=25565:25565 -v=/srv/server-data/bungee:/srv/server --name bungeecord_container -t bungee
 fi
+
+# Inform user of server IP
+printf "Server IP address: "
+ip addr | grep 'inet ' | grep -vE '(127.0.0.1|docker)' | cut -d/ -f1 | awk '{ print $2 }'
