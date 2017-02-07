@@ -17,5 +17,7 @@ docker rmi spigotmc
 # Clean data
 echo "Removing all data files."
 rm -rf /srv/server-data
+rm -rf /opt/buildtools
+rm -ff /opt/java
 
 echo "Done!"
