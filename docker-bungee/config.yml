@@ -12,7 +12,7 @@ listeners:
 - query_port: 25565
   motd: Southampon Science and Engineering Fair!
   priorities:
-  - mcs_lobby
+  - lobby
   bind_local_address: true
   tab_list: GLOBAL_PING
   query_enabled: false
