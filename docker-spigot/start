@@ -1,6 +1,6 @@
 #!/bin/bash
 cp /srv/res/spigot.jar /srv/server
-cp /srv/res/server.properties /srv/server
+cp /srv/res/ops.json /srv/server
 cp /srv/res/spigot.jar /srv/server
 cd /srv/server
 
@@ -8,5 +8,5 @@ cd /srv/server
 echo "eula=true" > eula.txt
 
 # Start Minecraft server!
-java -Xmx2G -XX:+UseConcMarkSweepGC -jar spigot.jar
+java -Xmx8G -XX:+UseConcMarkSweepGC -jar spigot.jar
 

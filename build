@@ -11,8 +11,8 @@ fi
 for f in /mnt/*.zip; do
     worldName="$(basename $f .zip)"
     echo "Creating data directory for $worldName."
-    mkdir -p /srv/server-data/mcs_$worldName/saves
-    unzip /mnt/$worldName.zip -d /srv/server-data/mcs_$worldName/saves
+    mkdir -p /srv/server-data/mcs_$worldName
+    unzip /mnt/$worldName.zip -d /srv/server-data/mcs_$worldName
 done
 
 # Create bungee config.yml

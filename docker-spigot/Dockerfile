@@ -16,7 +16,7 @@ RUN ln -s /opt/java/bin/java /usr/bin/java
 RUN cd /
 RUN mkdir -p /srv/res
 ADD ./start /srv/res/start
-ADD ./server.properties /srv/res/server.properties	
+ADD ./ops.json /srv/res/ops.json
 ADD ./spigot.jar /srv/res/spigot.jar
 RUN chmod a+x /srv/res/start
 

@@ -1,6 +1,6 @@
 # Ammended version of the default configuration file.
 
-ip_forward: false
+ip_forward: true
 network_compression_threshold: 256
 stats: ccd2bf9e-7182-4b10-ab93-5fae684ee334
 groups:
